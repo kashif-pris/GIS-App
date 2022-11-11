@@ -144,7 +144,7 @@ class LocationController_1
         $checkOutTime=\App\Models\Zone::where('id',$user->zone_id)->first();
 
 
-        $new_time = Carbon::now()->format('H:i');
+        $new_time = Carbon::now($break_from->timezone)->format('H:i');
         // date_default_timezone_set("Asia/Karachi");
         // // date("h:i:sa");
         // $new_time = Carbon::now('Asia/Karachi')->format('h:i A');
@@ -193,7 +193,7 @@ class LocationController_1
                                             ->groupBy('user')
                                             ->get();
               
-                $new_time = Carbon::now()->format('H:i');
+                $new_time = Carbon::now($break_to->timezone)->format('H:i');
                 $now = $new_time;
                 $date1 = new DateTime($attendanceTime->attendance_time);
                 // $date1->format('h:i A');

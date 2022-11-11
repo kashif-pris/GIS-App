@@ -11,11 +11,13 @@ use Grimzy\LaravelMysqlSpatial\Types\Polygon;
 use Grimzy\LaravelMysqlSpatial\Types\LineString;
 use App\CentralLogics\Helpers;
 use Auth;
+use Carbon\Carbon;
 use DB;
 class ZoneController extends Controller
 {
     public function index()
     {
+    
         $user = auth('admin')->user();
         $zones = Zone::latest()->paginate(config('default_pagination'));
         return view('admin-views.zone.index', compact('zones' , 'user'));
@@ -24,6 +26,8 @@ class ZoneController extends Controller
 
     public function store(Request $request)
     {
+        
+        // dd($request->all());
         $request->validate([
             'name' => 'required|unique:zones',
             'coordinates' => 'required',
@@ -32,6 +36,7 @@ class ZoneController extends Controller
             'break_from' => 'required',
             'break_to' => 'required',
             'business_logo' => 'required',
+            'timezone' =>'required',
             
         ]);
         $value = $request->coordinates; 
@@ -62,6 +67,7 @@ class ZoneController extends Controller
         $zone->restaurant_wise_topic =  'zone_'.$zone_id.'_restaurant';
         $zone->customer_wise_topic = 'zone_'.$zone_id.'_customer';
         $zone->deliveryman_wise_topic = 'zone_'.$zone_id.'_delivery_man';
+        $zone->timezone = $request->timezone;
         $zone->save();
 
         Toastr::success(trans('messages.zone_added_successfully'));
@@ -117,6 +123,7 @@ class ZoneController extends Controller
         $zone->break_from = $request->break_from;
         $zone->break_to = $request->break_to;
         $zone->business_logo = $ProfilePic;
+        $zone->timezone =$request->timezone;
 
        if($user->role_id == '1' && $user->id == '1')
         {
